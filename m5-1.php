@@ -7,6 +7,7 @@
 <body>
     
    <?php
+    error_reporting(E_ALL & ~E_NOTICE);
     $dsn = 'mysql:dbname=tb220213db;host=localhost';
     $user = 'tb-220213';
 	$password = 'RdBdQrv9rT';
@@ -48,7 +49,7 @@
 		       echo $row['date']."<br>";
 	           echo "<hr>";
 	      }
-    } elseif($_POST["delete"] != NULL){
+    } elseif($_POST["delete"]!=NULL){
 	    $delete = $_POST["delete"];
 	    $pw = $_POST["pw"];
         
@@ -101,8 +102,7 @@
         
    } 
    
-    if($_POST["name"]!=NULL && $_POST["comment"]!=NULL 
-        && $_POST["editornumber"]!=""){
+    if(isset($_POST["name"]) && isset($_POST["comment"]) && $_POST["editornumber"]!=""){
        $name = $_POST["name"];
 	   $comment = $_POST["comment"]; 
 	   $date = date("Y/m/d H:i:s");
