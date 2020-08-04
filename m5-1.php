@@ -7,9 +7,9 @@
 <body>
     
    <?php
-    $dsn = 'データベース名';
-    $user = 'ユーザー名';
-	$password = 'パスワード';
+    $dsn = 'mysql:dbname=tb220213db;host=localhost';
+    $user = 'tb-220213';
+	$password = 'RdBdQrv9rT';
 	$pdo = new PDO($dsn, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
 	
 	$sql = "CREATE TABLE IF NOT EXISTS tbtest"
@@ -21,14 +21,14 @@
 	.");";
 	$stmt = $pdo->query($sql);
 	
-	$name = $_POST["name"];
-	$comment = $_POST["comment"]; 
-	$date = date("Y/m/d H:i:s");
-	$delete = $_POST["delete"];
-	$editor = $_POST["editor"];
-	$pw = $_POST["pw"];
-	
 	if($_POST["name"]!=NULL && $_POST["comment"]!=NULL && $_POST["editornumber"]==NULL){
+	           	$name = $_POST["name"];
+	            $comment = $_POST["comment"]; 
+	            $date = date("Y/m/d H:i:s");
+	            $delete = $_POST["delete"];
+	            $editor = $_POST["editor"];
+	            $pw = $_POST["pw"];
+	           
 	           $sql = $pdo -> prepare("INSERT INTO newpost (name, comment, date, pw) 
 	                                   VALUES (:name, :comment, :date, :pw)");
 	           $sql -> bindParam(':name', $name, PDO::PARAM_STR);
@@ -48,10 +48,14 @@
 		       echo $row['date']."<br>";
 	           echo "<hr>";
 	      }
-    } elseif($delete != NULL){
+    } elseif($_POST["delete"] != NULL){
+	    $delete = $_POST["delete"];
+	    $pw = $_POST["pw"];
+        
         $sql = 'SELECT * FROM newpost';
         $stmt = $pdo->query($sql);
 	    $results = $stmt->fetchAll();
+	    
         foreach($results as $row){
                 if($row['id']==$delete){
                     if($row['pw'] != ""){
@@ -77,7 +81,14 @@
 	                                echo "<hr>";
         }
       }
-   } elseif($editor!=NULL){
+   } elseif($_POST["editor"]!=NULL){
+        $name = $_POST["name"];
+	    $comment = $_POST["comment"]; 
+	    $date = date("Y/m/d H:i:s");
+	    $delete = $_POST["delete"];
+	    $editor = $_POST["editor"];
+	    $pw = $_POST["pw"];
+	    
         $sql = 'SELECT * FROM newpost';
         $stmt = $pdo->query($sql);
 	    $results = $stmt->fetchAll();
@@ -92,7 +103,14 @@
    
     if($_POST["name"]!=NULL && $_POST["comment"]!=NULL 
         && $_POST["editornumber"]!=""){
+       $name = $_POST["name"];
+	   $comment = $_POST["comment"]; 
+	   $date = date("Y/m/d H:i:s");
+	   $delete = $_POST["delete"];
+	   $editor = $_POST["editor"];
+	   $pw = $_POST["pw"];        
        $editornumber = $_POST["editornumber"];
+       
        $sql = 'SELECT * FROM newpost';
        $stmt = $pdo->query($sql);
 	   $results = $stmt->fetchAll();
@@ -133,10 +151,12 @@
         
     <li><form action="" method="post">
     <label for="name">名前</label>
-    <input type="text" name="name" value="<?php echo $editorname;?>" ></li> 
+    <input type="text" name="name" value="<?php if (isset($editorname)){
+                                                    echo $editorname;}?>" ></li> 
     
     <li><label for="comment">投稿内容</label>
-    <input type="text" name="comment" value="<?php echo $editorcomment;?>" >
+    <input type="text" name="comment" value="<?php if (isset($editorcomment)){
+                                                       echo $editorcomment;}?>" >
     <input type="submit" name="submit"></li>
     
     <li><form action="" method="post">
